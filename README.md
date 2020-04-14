@@ -7,11 +7,11 @@ This action performs a simple single file transfer using FTP.
 - name: Upload bundle
   uses: bayssmekanique/action-simple-file-upload@v1
   with:
-    user: ${{ secrets.USER }}
-    password: ${{ secrets.PASSWORD }}
-    host: ${{ secrets.HOST }}
-    src: ./dist/bundle-${{ steps.check.outputs.version }}.zip
-    dest: archive/${{ steps.check.outputs.version }}/bundle.zip
+    user: ${{ secrets.FTP_USER }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    host: ${{ secrets.FTP_HOST }}
+    src: dist/bundle.zip
+    dest: archive/app/releaseBundle.zip
 ```
 
 ## Inputs
