@@ -16,7 +16,8 @@ async function run (): Promise < void > {
       throw result
     }
 
-    core.debug(result.report.join('\n'))
+    console.log(result)
+    core.debug('Upload Successful')
   } catch (error) {
     console.log(error)
     core.setFailed(error.message)
