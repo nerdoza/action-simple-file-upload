@@ -6,7 +6,7 @@ import UploadFile from '../src/ftp'
 describe('Upload File', function() {
   this.timeout(10000)
 
-  it('can upload test file Tele2', async function() {
+  it('can upload test file to Tele2', async function() {
     const config = {
       user: 'anonymous',
       password: 'password',

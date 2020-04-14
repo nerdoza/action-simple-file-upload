@@ -27,7 +27,7 @@ jobs:
 
       - name: Create release branch
         if: steps.check.outputs.changed == 'true'
-        uses: peterjgrainger/action-create-branch@v1.0.0
+        uses: peterjgrainger/action-create-branch@v2.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
@@ -75,7 +75,7 @@ jobs:
           release_name: Release v${{ steps.check.outputs.version }}
 
       - name: Delete release branch
-        uses: dawidd6/action-delete-branch@v2.0.1
+        uses: dawidd6/action-delete-branch@v3
         if: steps.check.outputs.changed == 'true' && always()
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
