@@ -1,0 +1,83 @@
+on: 
+  push:
+    branches:
+      - master
+
+name: Release
+
+jobs:
+  publish:
+    name: Build and Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Use Node.js v12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Check if version has been updated 
+        id: check
+        uses: EndBug/version-check@v1.2.2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          diff-search: true
+
+      - name: Create release branch
+        if: steps.check.outputs.changed == 'true'
+        uses: peterjgrainger/action-create-branch@v1.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          branch: release
+
+      - name: Install Dependencies
+        if: steps.check.outputs.changed == 'true'
+        run: npm ci
+
+      - name: Build
+        if: steps.check.outputs.changed == 'true'
+        run: npm run build
+
+      - name: Push to release branch
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          awk '!/dist\/**\/*/' .gitignore > tmp && mv tmp .gitignore
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add .
+          git commit -m "release"
+
+      - name: Creating version tag
+        if: steps.check.outputs.changed == 'true'
+        run: |
+          git tag -fa v${{ steps.check.outputs.version }} -m v${{ steps.check.outputs.version }}
+          git tag -fa v1 -m v${{ steps.check.outputs.version }}
+
+      - name: Push changes
+        if: steps.check.outputs.changed == 'true'
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: release
+          tags: true
+          force: true
+      
+      - name: Create Release
+        if: steps.check.outputs.changed == 'true'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: v${{ steps.check.outputs.version }}
+          release_name: Release v${{ steps.check.outputs.version }}
+
+      - name: Delete release branch
+        uses: dawidd6/action-delete-branch@v2.0.1
+        if: steps.check.outputs.changed == 'true' && always()
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branches: release
+    
