@@ -15,13 +15,12 @@ inputs:
     description: 'FTP Hostname'
     required: false
     default: '21'
-  file: 
-    description: 'Relative path of file to transfer'
+  src: 
+    description: 'Path to file to upload'
     required: true
   dest: 
-    description: 'Destination directory on FTP remote'
-    required: false
-    default: './'
+    description: 'Destination file path on FTP remote'
+    required: true
 runs:
   using: 'node12'
   main: 'dist/index.js'

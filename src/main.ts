@@ -7,16 +7,11 @@ async function run (): Promise < void > {
     const password = core.getInput('password')
     const host = core.getInput('host')
     const port = core.getInput('port') || '21'
-    const file = core.getInput('file')
+    const src = core.getInput('file')
     const dest = core.getInput('dest') || './'
 
+    await UploadFile({user, password, host, port, src, dest})
 
-    const result = await UploadFile({user, password, host, port, file, dest})
-    if (result.type === 'failure') {
-      throw result
-    }
-
-    console.log(result)
     core.debug('Upload Successful')
   } catch (error) {
     console.log(error)

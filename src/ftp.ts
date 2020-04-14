@@ -1,29 +1,51 @@
-import FTPDeploy, { FTPConfig } from 'ftp-deploy'
+import FTPClient from 'ftp'
+import { dirname } from 'path'
 
 export interface Options {
   user: string,
   password: string,
   host: string,
   port: string,
-  file: string,
+  src: string,
   dest: string
 }
 
 export default async function UploadFile(options: Options) {
-  const ftpDeploy = new FTPDeploy()
+  const ftpClient = new FTPClient()
 
-  const config = {
-      user: options.user,
-      password: options.password,
+  const put = (src: string, dest: string) => {
+    return new Promise((resolve, reject) => {
+      ftpClient.put(src, dest, error => {
+        error ? reject(error) : resolve()
+      })
+    })
+  }
+
+  const mkdir = (path: string) => {
+    return new Promise((resolve, reject) => {
+      ftpClient.mkdir(path, true, error => {
+        error ? reject(error) : resolve()
+      })
+    })
+  }
+
+  return new Promise((resolve, reject) => {
+    ftpClient.on('ready', async () => {
+      try {
+        await mkdir(dirname(options.dest))
+        await put(options.src, options.dest)
+        ftpClient.end()
+        resolve('Upload Successful')
+      } catch (error) {
+        reject(error)
+      }
+    })
+  
+    ftpClient.connect({
       host: options.host,
-      port: options.port,
-      localRoot: './',
-      remoteRoot: options.dest,
-      exclude: ['*/**/*'],
-      include: [options.file],
-      deleteRemote: false,
-      forcePasv: true
-  } as FTPConfig
-
-  return ftpDeploy.deploy(config)
+      port: parseInt(options.port, 10),
+      user: options.user,
+      password: options.password
+    })
+  })
 }

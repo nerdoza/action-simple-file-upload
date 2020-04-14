@@ -1,6 +1,6 @@
 {
   "name": "action-simple-file-upload",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "author": "Zachary Cardoza",
   "description": "GitHub Action that performs a simple file transfer using FTP",
   "license": "MIT",
@@ -23,15 +23,15 @@
   ],
   "dependencies": {
     "@actions/core": "^1.2.3",
-    "ftp-deploy": "^2.3.7"
+    "ftp": "^0.3.10"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
+    "@types/ftp": "^0.3.31",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.11.1",
     "@zeit/ncc": "^0.22.1",
     "chai": "^4.2.0",
-    "dotenv": "^8.2.0",
     "mocha": "^7.1.1",
     "ts-mocha": "^7.0.0",
     "ts-node": "^8.8.2",
