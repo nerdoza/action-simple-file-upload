@@ -1,0 +1,42 @@
+{
+  "name": "action-simple-file-upload",
+  "version": "1.0.0",
+  "author": "Zachary Cardoza",
+  "description": "GitHub Action that performs a simple file transfer using FTP",
+  "license": "MIT",
+  "private": true,
+  "main": "lib/main.js",
+  "scripts": {
+    "test": "ts-mocha test/*.ts",
+    "prebuild": "tsc",
+    "build": "ncc build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bayssmekanique/action-simple-file-transfer.git"
+  },
+  "keywords": [
+    "actions",
+    "node",
+    "ftp",
+    "transfer"
+  ],
+  "dependencies": {
+    "@actions/core": "^1.2.3",
+    "ftp-deploy": "^2.3.7"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "@types/node": "^13.11.1",
+    "@zeit/ncc": "^0.22.1",
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "mocha": "^7.1.1",
+    "ts-mocha": "^7.0.0",
+    "ts-node": "^8.8.2",
+    "tslint": "^6.1.1",
+    "tslint-config-standard": "^9.0.0",
+    "typescript": "^3.8.3"
+  }
+}

@@ -1,0 +1,30 @@
+name: 'Simple File Upload'
+description: 'Perform a simple file transfer using FTP.'
+author: 'Zachary Cardoza'
+inputs:
+  user:
+    description: 'FTP User'
+    required: true
+  password:
+    description: 'FTP Password'
+    required: true
+  host:
+    description: 'FTP Hostname'
+    required: true
+  port:
+    description: 'FTP Hostname'
+    required: false
+    default: '21'
+  file: 
+    description: 'Relative path of file to transfer'
+    required: true
+  dest: 
+    description: 'Destination directory on FTP remote'
+    required: false
+    default: './'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
+branding:
+  icon: 'upload'  
+  color: 'yellow'
