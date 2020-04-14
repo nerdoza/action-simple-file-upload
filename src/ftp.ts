@@ -1,5 +1,5 @@
 import FTPClient from 'ftp'
-import path from 'path'
+import { dirname, parse } from 'path'
 
 export interface Options {
   user: string,
@@ -12,6 +12,8 @@ export interface Options {
 
 export default async function UploadFile(options: Options) {
   const ftpClient = new FTPClient()
+  const parsedSource = parse(options.src)
+  const composedSource = `./${parsedSource.dir}/${parsedSource.base}`
 
   const put = (src: string, dest: string) => {
     return new Promise((resolve, reject) => {
@@ -32,8 +34,8 @@ export default async function UploadFile(options: Options) {
   return new Promise((resolve, reject) => {
     ftpClient.on('ready', async () => {
       try {
-        await mkdir(path.dirname(options.dest))
-        await put(path.resolve(options.src), options.dest)
+        await mkdir(dirname(options.dest))
+        await put(composedSource, options.dest)
         ftpClient.end()
         resolve('Upload Successful')
       } catch (error) {
