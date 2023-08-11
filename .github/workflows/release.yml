@@ -34,11 +34,9 @@ jobs:
           branch: release
 
       - name: Install Dependencies
-        if: steps.check.outputs.changed == 'true'
         run: npm ci
 
       - name: Build
-        if: steps.check.outputs.changed == 'true'
         run: npm run build
 
       - name: Push to release branch
