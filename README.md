@@ -41,4 +41,4 @@ This action performs a simple single file transfer using FTP.
 **Required** Destination file path on FTP remote server. (can change file name)
 
 ## Copyright and License
-© 2020 Zachary Cardoza under the [MIT license](LICENSE.md).
+© 2022 Zachary Cardoza under the [MIT license](LICENSE.md).

@@ -16,8 +16,48 @@ describe('Upload File', function() {
       dest: 'upload/test.txt'
     }
 
-    const result = await UploadFile(config)
-    expect(result).to.exist
+    await UploadFile(config)
   })
 
+  it('does fail with nonexistent file', async function() {
+    const config = {
+      user: 'anonymous',
+      password: 'password',
+      host: 'speedtest.tele2.net',
+      port: '21',
+      src: 'wrongDir/test.txt',
+      dest: 'upload/test.txt'
+    }
+
+    let caughtError
+
+    try {
+      await UploadFile(config)
+    } catch (error) {
+      caughtError = error
+    }
+
+    expect(caughtError).to.be.an('error')
+  })
+
+  it('does fail with directory permissions failure', async function() {
+    const config = {
+      user: 'anonymous',
+      password: 'password',
+      host: 'speedtest.tele2.net',
+      port: '21',
+      src: 'test/test.txt',
+      dest: 'wrongDir/test.txt'
+    }
+
+    let caughtError
+
+    try {
+      await UploadFile(config)
+    } catch (error) {
+      caughtError = error
+    }
+
+    expect(caughtError).to.be.an('error')
+  })
 })

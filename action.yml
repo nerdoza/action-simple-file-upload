@@ -22,7 +22,7 @@ inputs:
     description: 'Destination file path on FTP remote'
     required: true
 runs:
-  using: 'node12'
+  using: 'node16'
   main: 'dist/index.js'
 branding:
   icon: 'upload'  

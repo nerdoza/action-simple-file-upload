@@ -1,5 +1,5 @@
-import FTPClient from 'ftp'
-import { dirname, parse } from 'path'
+import * as ftp from 'basic-ftp'
+import { parse, posix } from 'path'
 
 export interface Options {
   user: string,
@@ -11,43 +11,22 @@ export interface Options {
 }
 
 export default async function UploadFile(options: Options) {
-  const ftpClient = new FTPClient()
+  const ftpClient = new ftp.Client()
   const parsedSource = parse(options.src)
-  const composedSource = `./${parsedSource.dir}/${parsedSource.base}`
+  const composedSource = posix.join(parsedSource.dir, parsedSource.base)
+  const parsedDest = parse(options.dest)
 
-  const put = (src: string, dest: string) => {
-    return new Promise((resolve, reject) => {
-      ftpClient.put(src, dest, error => {
-        error ? reject(error) : resolve()
-      })
-    })
-  }
-
-  const mkdir = (path: string) => {
-    return new Promise((resolve, reject) => {
-      ftpClient.mkdir(path, true, error => {
-        error ? reject(error) : resolve()
-      })
-    })
-  }
-
-  return new Promise((resolve, reject) => {
-    ftpClient.on('ready', async () => {
-      try {
-        await mkdir(dirname(options.dest))
-        await put(composedSource, options.dest)
-        ftpClient.end()
-        resolve('Upload Successful')
-      } catch (error) {
-        reject(error)
-      }
-    })
-  
-    ftpClient.connect({
-      host: options.host,
-      port: parseInt(options.port, 10),
-      user: options.user,
-      password: options.password
-    })
+  await ftpClient.access({
+    host: options.host,
+    port: parseInt(options.port, 10),
+    user: options.user,
+    password: options.password
   })
+
+  try {
+    await ftpClient.ensureDir(parsedDest.dir)
+    await ftpClient.uploadFrom(composedSource, parsedDest.base)
+  } finally {
+    ftpClient.close()
+  }
 }

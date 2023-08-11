@@ -22,21 +22,21 @@
     "transfer"
   ],
   "dependencies": {
-    "@actions/core": "^1.9.1",
-    "ftp": "^0.3.10"
+    "@actions/core": "^1.10.0",
+    "basic-ftp": "^5.0.3"
   },
   "devDependencies": {
-    "@types/chai": "^4.2.11",
-    "@types/ftp": "^0.3.31",
-    "@types/mocha": "^7.0.2",
-    "@types/node": "^13.11.1",
-    "@zeit/ncc": "^0.22.1",
-    "chai": "^4.2.0",
+    "@types/chai": "^4.3.5",
+    "@types/ftp": "^0.3.33",
+    "@types/mocha": "^10.0.1",
+    "@types/node": "^20.4.9",
+    "@zeit/ncc": "^0.22.3",
+    "chai": "^4.3.7",
     "mocha": "^10.2.0",
-    "ts-mocha": "^7.0.0",
-    "ts-node": "^8.8.2",
-    "tslint": "^6.1.1",
+    "ts-mocha": "^10.0.0",
+    "ts-node": "^10.9.1",
+    "tslint": "^6.1.3",
     "tslint-config-standard": "^9.0.0",
-    "typescript": "^3.8.3"
+    "typescript": "^5.1.6"
   }
 }
