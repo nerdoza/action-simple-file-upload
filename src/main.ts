@@ -14,7 +14,11 @@ async function run (): Promise<void> {
     core.debug('Upload Successful')
   } catch (error) {
     console.log(error)
-    core.setFailed(error.message)
+    if (error instanceof Error) {
+      core.error(error.message)
+    } else {
+      core.error('Unknown error')
+    }
     process.exit(1)
   }
 }
