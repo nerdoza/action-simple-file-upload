@@ -6,21 +6,24 @@ export interface Options {
   password: string,
   host: string,
   port: string,
+  secure: string,
   src: string,
   dest: string
 }
 
-export default async function UploadFile(options: Options) {
+export default async function (options: Options) {
   const ftpClient = new ftp.Client()
   const parsedSource = parse(options.src)
   const composedSource = posix.join(parsedSource.dir, parsedSource.base)
   const parsedDest = parse(options.dest)
+  const secure = options.secure === 'true' || (options.secure === 'implicit' ? 'implicit' : false)
 
   await ftpClient.access({
     host: options.host,
     port: parseInt(options.port, 10),
     user: options.user,
-    password: options.password
+    password: options.password,
+    secure
   })
 
   try {

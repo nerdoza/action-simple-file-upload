@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import UploadFile from './ftp'
+import uploadFile from './ftp'
 
 async function run (): Promise<void> {
   try {
@@ -7,10 +7,11 @@ async function run (): Promise<void> {
     const password = core.getInput('password')
     const host = core.getInput('host')
     const port = core.getInput('port') || '21'
+    const secure = core.getInput('secure') || 'false'
     const src = core.getInput('src')
     const dest = core.getInput('dest') || './'
 
-    await UploadFile({user, password, host, port, src, dest})
+    await uploadFile({user, password, host, port, secure, src, dest})
     core.debug('Upload Successful')
   } catch (error) {
     console.log(error)

@@ -15,6 +15,10 @@ inputs:
     description: 'FTP Hostname'
     required: false
     default: '21'
+  secure:
+    description: 'Should use FTPS?'
+    required: false
+    default: false
   src: 
     description: 'Path to file to upload'
     required: true
