@@ -22,6 +22,10 @@ inputs:
   src: 
     description: 'Path to file to upload'
     required: true
+  glob:
+    description: 'Specifies whether `src` contains glob expression'
+    required: false
+    default: false
   dest: 
     description: 'Destination file path on FTP remote'
     required: true

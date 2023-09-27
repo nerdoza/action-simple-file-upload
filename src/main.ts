@@ -10,8 +10,9 @@ async function run (): Promise<void> {
     const secure = core.getInput('secure') || 'false'
     const src = core.getInput('src')
     const dest = core.getInput('dest') || './'
+    const glob = core.getInput('glob') || 'false'
 
-    await uploadFile({user, password, host, port, secure, src, dest})
+    await uploadFile({user, password, host, port, secure, src, glob, dest})
     core.debug('Upload Successful')
   } catch (error) {
     console.log(error)

@@ -40,6 +40,10 @@ This action performs a simple single file transfer using FTP.
 
 **Required** The path to the file to upload.
 
+### `glob`
+
+**Optional** If set to `true` will allow using a glob expression like `*.txt` in `src`, thus allowing to upload multiple files. (Default: `false`)
+
 ### `dest`
 
 **Required** Destination file path on FTP remote server. (can change file name)
