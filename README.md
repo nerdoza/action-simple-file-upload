@@ -46,7 +46,8 @@ This action performs a simple single file transfer using FTP.
 
 ### `dest`
 
-**Required** Destination file path on FTP remote server. (can change file name)
+**Required** Destination path on FTP remote server. (can change file name)
+If `dest` ends with a `/` a directory name is assumed and the source filename is kept.
 
 ## Copyright and License
 © 2022 Zachary Cardoza under the [MIT license](LICENSE.md).
