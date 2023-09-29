@@ -3,15 +3,28 @@
 This action performs a simple single file transfer using FTP.
 
 ## Usage
+Basic usage with a single file (renamed on remote):
 ```yml
 - name: Upload bundle
-  uses: bayssmekanique/action-simple-file-upload@v1
+  uses: bayssmekanique/action-simple-file-upload@v2
   with:
     user: ${{ secrets.FTP_USER }}
     password: ${{ secrets.FTP_PASSWORD }}
     host: ${{ secrets.FTP_HOST }}
     src: dist/bundle.zip
     dest: archive/app/releaseBundle.zip
+```
+
+Dynamic pattern usage on a directory:
+```yml
+- name: Upload bundle
+  uses: bayssmekanique/action-simple-file-upload@v2
+  with:
+    user: ${{ secrets.FTP_USER }}
+    password: ${{ secrets.FTP_PASSWORD }}
+    host: ${{ secrets.FTP_HOST }}
+    src: dist/*.{js,css,html}
+    dest: archive/app/
 ```
 
 ## Inputs
