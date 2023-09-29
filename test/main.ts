@@ -1,6 +1,8 @@
 import { expect } from 'chai'
 import UploadFile from '../src/ftp'
 
+const TEST_ALLOWS_MKDIR = false
+
 const defaultConfig = {
   user: 'anonymous',
   password: 'password',
@@ -16,9 +18,8 @@ describe('Upload File', function () {
   it('can upload test file using FTP', async function () {
     const config = {
       ...defaultConfig,
-      src: 'test/test.txt',
-      dest: 'upload/test.txt',
-      glob: 'false'
+      src: 'test/fixtures/index.html',
+      dest: 'upload/root.html'
     }
 
     const uploadedFiles = await UploadFile(config)
@@ -29,9 +30,8 @@ describe('Upload File', function () {
   it('does fail with nonexistent file', async function () {
     const config = {
       ...defaultConfig,
-      src: 'wrongDir/test.txt',
-      dest: 'upload/test.txt',
-      glob: 'false'
+      src: 'test/fixtures/secrets.txt',
+      dest: 'upload/secrets.txt'
     }
 
     let caughtError
@@ -48,9 +48,8 @@ describe('Upload File', function () {
   it('does fail with directory permissions failure', async function () {
     const config = {
       ...defaultConfig,
-      src: 'test/test.txt',
-      dest: 'wrongDir/test.txt',
-      glob: 'false'
+      src: 'test/fixtures/index.html',
+      dest: 'wrongDir/index.html'
     }
 
     let caughtError
@@ -67,9 +66,8 @@ describe('Upload File', function () {
   it('can upload test file using FTP with dynamic pattern matching one file', async function () {
     const config = {
       ...defaultConfig,
-      src: 'test/test.*',
-      dest: 'upload',
-      glob: 'true'
+      src: 'test/fixtures/index.*',
+      dest: 'upload'
     }
 
     const uploadedFiles = await UploadFile(config)
@@ -80,9 +78,36 @@ describe('Upload File', function () {
   it('can upload test file using FTP with dynamic pattern matching multiple files', async function () {
     const config = {
       ...defaultConfig,
-      src: 'test/*.txt',
-      dest: 'upload',
-      glob: 'true'
+      src: 'test/fixtures/*',
+      dest: 'upload'
+    }
+
+    const uploadedFiles = await UploadFile(config)
+    expect(uploadedFiles).to.be.an('array')
+    expect(uploadedFiles).to.have.lengthOf(4)
+  })
+
+  it('can upload test file using FTP with dynamic pattern matching multiple files using recursive pattern', async function () {
+    if (!TEST_ALLOWS_MKDIR) {
+      this.skip() // If directory creation is not allowed, skip this test
+    }
+
+    const config = {
+      ...defaultConfig,
+      src: 'test/fixtures/**/*',
+      dest: 'upload'
+    }
+
+    const uploadedFiles = await UploadFile(config)
+    expect(uploadedFiles).to.be.an('array')
+    expect(uploadedFiles).to.have.lengthOf(3)
+  })
+
+  it('can upload test file using FTP with dynamic pattern matching multiple files using bracket', async function () {
+    const config = {
+      ...defaultConfig,
+      src: 'test/fixtures/*.{txt,png}',
+      dest: 'upload'
     }
 
     const uploadedFiles = await UploadFile(config)
@@ -94,8 +119,7 @@ describe('Upload File', function () {
     const config = {
       ...defaultConfig,
       src: 'test/test.txt',
-      dest: 'wrongDir',
-      glob: 'false'
+      dest: 'wrongDir'
     }
 
     let caughtError
