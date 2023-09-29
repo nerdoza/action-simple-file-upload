@@ -1,41 +1,38 @@
 import * as ftp from 'basic-ftp'
 import { join, parse, posix } from 'path'
-import { glob } from 'fast-glob'
+import { glob, isDynamicPattern } from 'fast-glob'
 
 export interface Options {
-  user: string,
-  password: string,
-  host: string,
-  port: string,
-  secure: string,
-  src: string,
-  glob: string,
-  dest: string,
+  user: string
+  password: string
+  host: string
+  port: string
+  secure: string
+  src: string
+  dest: string
+  verbose: string
 }
 
-async function getFiles (options: Options) {
-  if (options.glob === 'true') {
-    const globbedFiles = await glob(options.src)
-    const files = globbedFiles.map(filename => parse(filename)).map(path => posix.join(path.dir, path.base))
-    if (files.length == 0) {
-      throw new Error("glob didn't match any files to upload")
-    }
-    return files
-  } else {
-    const parsedSource = parse(options.src)
-    return [posix.join(parsedSource.dir, parsedSource.base)]
-  }
+async function getFileSources (src: string) {
+  return (await glob(src)).map(src => {
+    const parsedSource = parse(src)
+    return posix.join(parsedSource.dir, parsedSource.base)
+  })
 }
 
-export default async function(options: Options) {
+export default async function (options: Options) {
+  const shouldBeVerbose = options.verbose === 'true'
+  const srcIsDynamic = isDynamicPattern(options.src)
+  const fileSources = await getFileSources(options.src)
   const ftpClient = new ftp.Client()
-  const sources = await getFiles(options)
-  const parsedDest = parse(options.dest)
-  const destIsDirectory = options.dest.at(-1) === '/'
   const secure = options.secure === 'true' || (options.secure === 'implicit' ? 'implicit' : false)
 
-  if (!destIsDirectory && sources.length > 1) {
-    throw new Error("glob returned more than one file, but the `dest` is not a directory")
+  if (fileSources.length === 0) {
+    if (!srcIsDynamic) {
+      throw new Error(`No files found matching ${options.src}`)
+    } else if (shouldBeVerbose) {
+      console.error(`No files found matching ${options.src}`)
+    }
   }
 
   await ftpClient.access({
@@ -46,17 +43,39 @@ export default async function(options: Options) {
     secure
   })
 
-  try {
-    await ftpClient.ensureDir(parsedDest.dir)
-    for (const source of sources) {
-      const remote = destIsDirectory
-        ? join(parsedDest.base, parse(source).base)
-        : parsedDest.base
+  const ensureDir = async (path: string) => {
+    try {
+      await ftpClient.ensureDir(path)
+    } catch (error) {
+      if (shouldBeVerbose) {
+        console.error(`Could not create directory ${path}`)
+      }
+      throw error
+    }
+  }
 
-      await ftpClient.uploadFrom(source, remote)
+  try {
+    for (const fileSource of fileSources) {
+      const parsedFileSource = parse(fileSource)
+      const remoteDir = srcIsDynamic
+        ? join(options.dest, parsedFileSource.dir.replace(parse(options.src).dir, ''))
+        : parse(options.dest).dir
+
+      if (shouldBeVerbose) {
+        console.log(`Ensuring directory ${remoteDir} exists`)
+      }
+      await ftpClient.cd('/')
+      await ensureDir(remoteDir)
+
+      const remoteFile = join(remoteDir, parsedFileSource.base)
+
+      if (shouldBeVerbose) {
+        console.log(`Uploading ${fileSource} to ${remoteFile}`)
+      }
+      await ftpClient.uploadFrom(fileSource, remoteFile)
     }
 
-    return sources
+    return fileSources
   } finally {
     ftpClient.close()
   }

@@ -38,16 +38,15 @@ This action performs a simple single file transfer using FTP.
 
 ### `src`
 
-**Required** The path to the file to upload.
-
-### `glob`
-
-**Optional** If set to `true` will allow using a glob expression like `*.txt` in `src`, thus allowing to upload multiple files. (Default: `false`)
+**Required** The path to the file(s) to upload. If `src` is a static path, a single file is uploaded. If `src` is a dynamic pattern (see (fast-glob)[https://github.com/mrmlnc/fast-glob#faq]), all matching files are uploaded relative to the base directory of the pattern.
 
 ### `dest`
 
-**Required** Destination path on FTP remote server. (can change file name)
-If `dest` ends with a `/` a directory name is assumed and the source filename is kept.
+**Required** Destination path on FTP remote server. If `src` is a static path, `dest` must be a full file path including the destination file name. If `src` is a dynamic pattern, `dest` must be a directory (which will be created if it does not already exist).
+
+### `verbose`
+
+**Optional** Enable verbose logging. (Default: `false`)
 
 ## Copyright and License
 © 2022 Zachary Cardoza under the [MIT license](LICENSE.md).
