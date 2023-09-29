@@ -20,11 +20,15 @@ inputs:
     required: false
     default: false
   src: 
-    description: 'Path to file to upload'
+    description: 'Path to file(s) to upload (can be a glob)'
     required: true
   dest: 
-    description: 'Destination file path on FTP remote'
+    description: 'Destination path on FTP remote'
     required: true
+  verbose:
+    description: 'Should output verbose logs?'
+    required: false
+    default: false
 runs:
   using: 'node16'
   main: 'dist/index.js'

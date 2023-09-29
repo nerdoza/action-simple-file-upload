@@ -1,5 +1,5 @@
 declare module 'ftp-deploy' {
-  type FTPConfig = {
+  interface FTPConfig {
     user: string
     password: string
     host: string
@@ -12,23 +12,23 @@ declare module 'ftp-deploy' {
     forcePasv: boolean
   }
 
-  type DeployReport = Array<string[]>
+  type DeployReport = string[][]
 
-  type DeploySuccess = {
+  interface DeploySuccess {
     type: 'success'
     report: DeployReport
   }
 
-  type DeployFailure = {
+  interface DeployFailure {
     type: 'failure'
     error: Error
   }
 
   type DeployStatus = DeploySuccess | DeployFailure
 
- export default class FTPDeploy {
-    deploy: (config: FTPConfig) => Promise<DeployStatus> 
+  export default class FTPDeploy {
+    deploy: (config: FTPConfig) => Promise<DeployStatus>
   }
 
-  export { FTPConfig }
+  export type { FTPConfig }
 }
