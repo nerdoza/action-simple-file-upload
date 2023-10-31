@@ -19,6 +19,18 @@ describe('Upload File', function () {
     const config = {
       ...defaultConfig,
       src: 'test/fixtures/index.html',
+      dest: 'upload/index.html'
+    }
+
+    const uploadedFiles = await UploadFile(config)
+    expect(uploadedFiles).to.be.an('array')
+    expect(uploadedFiles).to.have.lengthOf(1)
+  })
+
+  it('can upload renamed test file using FTP', async function () {
+    const config = {
+      ...defaultConfig,
+      src: 'test/fixtures/index.html',
       dest: 'upload/root.html'
     }
 

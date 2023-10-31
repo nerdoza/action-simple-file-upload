@@ -48,7 +48,7 @@ export default async function (options: Options) {
       await ftpClient.ensureDir(path)
     } catch (error) {
       if (shouldBeVerbose) {
-        console.error(`Could not create directory ${path}`)
+        console.error(`Could not create directory '${path}'`)
       }
       throw error
     }
@@ -57,20 +57,23 @@ export default async function (options: Options) {
   try {
     for (const fileSource of fileSources) {
       const parsedFileSource = parse(fileSource)
+      const parsedFileDest = parse(options.dest)
       const remoteDir = srcIsDynamic
         ? join(options.dest, parsedFileSource.dir.replace(parse(options.src).dir, ''))
-        : parse(options.dest).dir
+        : parsedFileDest.dir
 
       if (shouldBeVerbose) {
-        console.log(`Ensuring directory ${remoteDir} exists`)
+        console.log(`Ensuring directory '${remoteDir}' exists`)
       }
       await ftpClient.cd('/')
       await ensureDir(remoteDir)
 
-      const remoteFile = join(remoteDir, parsedFileSource.base)
+      const remoteFile = srcIsDynamic
+        ? join(remoteDir, parsedFileSource.base)
+        : join(remoteDir, parsedFileDest.base)
 
       if (shouldBeVerbose) {
-        console.log(`Uploading ${fileSource} to ${remoteFile}`)
+        console.log(`Uploading '${fileSource}' to '${remoteFile}'`)
       }
       await ftpClient.uploadFrom(fileSource, remoteFile)
     }
