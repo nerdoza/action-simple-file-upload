@@ -17,8 +17,6 @@
   "typescript.validate.enable": true,
   "typescript.format.insertSpaceAfterConstructor": true,
   "typescript.format.insertSpaceBeforeFunctionParenthesis": true,
-  "tslint.jsEnable": true,
-  "tslint.ignoreDefinitionFiles": false,
   "eslint.format.enable": true,
   "eslint.onIgnoredFiles": "warn"
 }
