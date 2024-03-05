@@ -7,7 +7,7 @@
   "editor.formatOnPaste": false,
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
-    "source.fixAll.tslint": true
+    "source.fixAll.tslint": "explicit"
   },
   "search.exclude": {
     "**/dist": true,
