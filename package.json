@@ -1,6 +1,6 @@
 {
   "name": "action-simple-file-upload",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "author": "Zachary Cardoza",
   "description": "GitHub Action that performs a simple file transfer using FTP",
   "license": "MIT",
@@ -15,7 +15,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bayssmekanique/action-simple-file-transfer.git"
+    "url": "git+https://github.com/nerdoza/action-simple-file-transfer.git"
   },
   "keywords": [
     "actions",
