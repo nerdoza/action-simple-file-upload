@@ -1,6 +1,6 @@
 {
   "name": "action-simple-file-upload",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "author": "Zachary Cardoza",
   "description": "GitHub Action that performs a simple file transfer using FTP",
   "license": "MIT",
