@@ -6,7 +6,7 @@ This action performs a simple single file transfer using FTP.
 Basic usage with a single file (renamed on remote):
 ```yml
 - name: Upload bundle
-  uses: bayssmekanique/action-simple-file-upload@v2
+  uses: nerdoza/action-simple-file-upload@v2
   with:
     user: ${{ secrets.FTP_USER }}
     password: ${{ secrets.FTP_PASSWORD }}
@@ -18,7 +18,7 @@ Basic usage with a single file (renamed on remote):
 Dynamic pattern usage on a directory:
 ```yml
 - name: Upload bundle
-  uses: bayssmekanique/action-simple-file-upload@v2
+  uses: nerdoza/action-simple-file-upload@v2
   with:
     user: ${{ secrets.FTP_USER }}
     password: ${{ secrets.FTP_PASSWORD }}
@@ -62,4 +62,4 @@ Dynamic pattern usage on a directory:
 **Optional** Enable verbose logging. (Default: `false`)
 
 ## Copyright and License
-© 2022 Zachary Cardoza under the [MIT license](LICENSE.md).
+© 2024 Zachary Cardoza under the [MIT license](LICENSE.md).
