@@ -17,7 +17,8 @@
       "./types"
     ],
     "lib": [
-      "es2023"
+      "es2023",
+      "esnext.disposable"
     ]
   },
   "include": [
