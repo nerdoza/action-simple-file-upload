@@ -11,7 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout the repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Use Node.js v24
         uses: actions/setup-node@v4
@@ -20,18 +22,10 @@ jobs:
 
       - name: Check if version has been updated 
         id: check
-        uses: EndBug/version-check@v1.2.2
+        uses: EndBug/version-check@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           diff-search: true
-
-      - name: Create release branch
-        if: steps.check.outputs.changed == 'true'
-        uses: peterjgrainger/action-create-branch@v2.0.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          branch: release
 
       - name: Install Dependencies
         run: npm ci
@@ -42,7 +36,7 @@ jobs:
       - name: Push to release branch
         if: steps.check.outputs.changed == 'true'
         run: |
-          awk '!/dist\/**\/*/' .gitignore > tmp && mv tmp .gitignore
+          awk '!/^dist$/' .gitignore > tmp && mv tmp .gitignore
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add .
@@ -51,31 +45,22 @@ jobs:
       - name: Creating version tag
         if: steps.check.outputs.changed == 'true'
         run: |
-          git tag -fa v${{ steps.check.outputs.version }} -m v${{ steps.check.outputs.version }}
-          git tag -fa v2 -m v${{ steps.check.outputs.version }}
+          VERSION=${{ steps.check.outputs.version }}
+          MAJOR=$(echo $VERSION | cut -d. -f1)
+          git tag -fa v${VERSION} -m v${VERSION}
+          git tag -fa v${MAJOR} -m v${VERSION}
 
       - name: Push changes
         if: steps.check.outputs.changed == 'true'
-        uses: ad-m/github-push-action@master
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branch: release
-          tags: true
-          force: true
-      
+        run: git push origin HEAD:release --force --tags
+
       - name: Create Release
         if: steps.check.outputs.changed == 'true'
-        uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ steps.check.outputs.version }}
-          release_name: Release v${{ steps.check.outputs.version }}
+        run: gh release create v${{ steps.check.outputs.version }} --title "Release v${{ steps.check.outputs.version }}" --notes ""
 
       - name: Delete release branch
-        uses: dawidd6/action-delete-branch@v3
-        if: steps.check.outputs.changed == 'true' && always()
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          branches: release
+        if: always() && steps.check.outputs.changed == 'true'
+        run: git push origin --delete release || true
     
